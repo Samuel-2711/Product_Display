@@ -1,0 +1,61 @@
+﻿@model TreasuryBP
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Create TreasuryBP</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" class="row">
+            <div class="border p-3 col-12">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th><label asp-for="SecurityId" class="form-label"></label></th>
+                            <td>
+                                <input asp-for="SecurityId" class="form-control" />
+                                <span asp-validation-for="SecurityId" class="text-danger"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label asp-for="Maturity" class="form-label"></label></th>
+                            <td>
+                                <input asp-for="Maturity" class="form-control" />
+                                <span asp-validation-for="Maturity" class="text-danger"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label asp-for="TenorDays" class="form-label"></label></th>
+                            <td>
+                                <input asp-for="TenorDays" class="form-control" />
+                                <span asp-validation-for="TenorDays" class="text-danger"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label asp-for="DiscountPercentage" class="form-label"></label></th>
+                            <td>
+                                <input asp-for="DiscountPercentage" class="form-control" />
+                                <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row pt-3">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-primary form-control">Create</button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a asp-controller="TreasuryBP" asp-action="Index" class="btn btn-outline-primary border form-control">
+                            Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

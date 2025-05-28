@@ -1,0 +1,100 @@
+﻿@model Product_Display.Models.View_Model.FGNBondVM
+
+@{
+    ViewData["Title"] = Model.FGNBond.ISIN != null ? "Edit Bond" : "Create Bond";
+}
+
+<div class="card-body p-4">
+    <form method="post">
+        <input asp-for="FGNBond.ISIN" hidden />
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <label asp-for="FGNBond.ISIN" class="form-label"></label>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="FGNBond.Security" class="form-label"></label>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="FGNBond.Maturity" class="form-label"></label>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input asp-for="FGNBond.ISIN" class="form-control" />
+                    <span asp-validation-for="FGNBond.ISIN" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <input asp-for="FGNBond.Security" class="form-control" />
+                    <span asp-validation-for="FGNBond.Security" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <input asp-for="FGNBond.Maturity" type="date" class="form-control" />
+                    <span asp-validation-for="FGNBond.Maturity" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label asp-for="FGNBond.YearsToMaturity" class="form-label"></label>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="FGNBond.Price" class="form-label"></label>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="FGNBond.YieldToMaturity" class="form-label"></label>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input asp-for="FGNBond.YearsToMaturity" class="form-control" />
+                    <span asp-validation-for="FGNBond.YearsToMaturity" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <input asp-for="FGNBond.Price" class="form-control" />
+                    <span asp-validation-for="FGNBond.Price" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <input asp-for="FGNBond.YieldToMaturity" class="form-control" />
+                    <span asp-validation-for="FGNBond.YieldToMaturity" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label asp-for="FGNBond.Coupon" class="form-label"></label>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input asp-for="FGNBond.Coupon" class="form-control" />
+                    <span asp-validation-for="FGNBond.Coupon" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">
+                        @(Model.FGNBond.ISIN != null ? "Update" : "Create")
+                    </button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-action="Index" class="btn btn-outline-primary form-control">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+
+
+@section Scripts {
+@{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

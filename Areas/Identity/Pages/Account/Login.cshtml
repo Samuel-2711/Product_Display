@@ -1,0 +1,64 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LoginLayout";
+}
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        background-color: #28a745; /* Green background */
+    }
+
+    .center-wrapper {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 600px;
+        background-color: #ffffff;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .login-logo {
+        max-width: 120px;
+        margin-bottom: 25px;
+    }
+</style>
+
+<div class="center-wrapper">
+    <div class="login-container">
+        <img src="~/images/badge.png" alt="Login Logo" class="login-logo" /> <!-- Your logo path -->
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="form-floating mb-4 text-start">
+                <input asp-for="Input.Username" class="form-control" autocomplete="off" placeholder="Username" />
+                <label asp-for="Input.Username">Username</label>
+                <span asp-validation-for="Input.Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-4 text-start">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="Password" />
+                <label asp-for="Input.Password">Password</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 py-2">Login</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
