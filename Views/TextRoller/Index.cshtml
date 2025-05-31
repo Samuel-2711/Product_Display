@@ -1,0 +1,93 @@
+﻿@model List<Product_Display.Models.TextRoller>
+
+@{
+    ViewData["Title"] = "Text Roller";
+}
+
+<div class="card mt-4 shadow">
+    <div class="card-header bg-success bg-gradient text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Text Roller</h4>
+        </div>
+        </<div>
+
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createModal">
+            <i class="bi bi-plus-circle"></i> Add Text
+        </button>
+    
+    <div class="card-body">
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Marquee Text</th>
+                    <th style="width: 180px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr data-id="@item.Id">
+                        <td>@item.Text</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-primary editBtn" data-id="@item.Id">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger deleteBtn" data-id="@item.Id">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Create Modal -->
+@await Html.PartialAsync("Create", new Product_Display.Models.TextRoller())
+
+<!-- Edit Modal Placeholder -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- AJAX content will load here -->
+        </div>
+    </div>
+</div>
+
+<!-- Anti-forgery token -->
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Load Edit modal
+            $('.editBtn').click(function () {
+                const id = $(this).data('id');
+                $('#editModal .modal-content').load('/TextRoller/Edit/' + id, function () {
+                    $('#editModal').modal('show');
+                });
+            });
+
+            // Delete
+            $('.deleteBtn').click(function () {
+                if (!confirm('Are you sure you want to delete this text?')) return;
+                const id = $(this).data('id');
+                $.ajax({
+                    url: '/TextRoller/Delete/' + id,
+                    type: 'POST',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function () {
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('Error deleting text.');
+                    }
+                });
+            });
+        });
+    </script>
+}

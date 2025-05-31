@@ -15,6 +15,8 @@ namespace Product_Display.Data
         public DbSet<FGNBond> FGNBonds { get; set; }
         public DbSet<ForexRate>ForexRates {  get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<SavingDay> SavingDays { get; set; }
+        public DbSet<TextRoller> TextRollers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
