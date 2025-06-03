@@ -1,15 +1,15 @@
-﻿@model IEnumerable<Product_Display.Models.TextRoller>
+﻿@model List<Product_Display.Models.SavingDay>
 @using Product_Display.Models
 
 @{
-    ViewData["Title"] = "Text Roller";
+    ViewData["Title"] = "Saving Days";
 }
 
 <div class="card shadow border-0 mt-4">
     <div class="card-header bg-success bg-gradient text-white d-flex justify-content-between align-items-center">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Text Roller</h2>
+                <h2 class="text-white py-2">Saving Days</h2>
             </div>
         </div>
     </div>
@@ -20,33 +20,33 @@
                 <!-- You can add filters/search here if needed -->
             </div>
             <div class="col-6 text-end">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
-                    <i class="bi bi-plus-circle"></i> Add Text
+                <button id="btnShowCreateModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+                    <i class="bi bi-plus-circle"></i> Add Saving Day
                 </button>
             </div>
         </div>
 
-        <table class="table table-striped table-borderless" id="textRollerTable">
+        <table class="table table-striped table-borderless" id="savingDayTable">
             <thead>
                 <tr>
-                    <th>Marquee Text</th>
+                    <th>Days</th>
+                    <th>Percent</th>
                     <th style="width: 200px;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>@item.Text</td>
+                    <tr data-id="@item.Id">
+                        <td>@item.Days</td>
+                        <td>@item.Percent</td>
                         <td>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-primary editBtn" data-id="@item.Id">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </button>
-                                <button class="btn btn-sm btn-danger deleteBtn" data-id="@item.Id">
-                                    <i class="bi bi-trash"></i> Delete
-                                </button>
-                            </div>
+                            <button class="btn btn-sm btn-primary editBtn" data-id="@item.Id">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger deleteBtn ms-2" data-id="@item.Id">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
                         </td>
                     </tr>
                 }
@@ -55,10 +55,8 @@
     </div>
 </div>
 
-<!-- Include Create Modal Partial -->
-@await Html.PartialAsync("Create")
-
-<!-- Edit Modal Container -->
+<!-- Include Create and Edit Partial Views -->
+@await Html.PartialAsync("Create", new SavingDay())
 <div id="editModal" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -67,38 +65,57 @@
     </div>
 </div>
 
-<!-- Anti-forgery Token -->
+<!-- Anti-forgery token -->
 @Html.AntiForgeryToken()
+
+<!-- Toast Notification -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
+    <div id="deleteToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">
+                Saving day deleted successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Load Edit Modal
-            $('.editBtn').click(function () {
-                let id = $(this).data('id');
-                $('#editModal .modal-content').load('/TextRoller/Edit/' + id, function () {
-                    $('#editModal').modal('show');
-                });
-            });
-
-            // Handle Delete
+            // Delete button
             $('.deleteBtn').click(function () {
-                let id = $(this).data('id');
-                if (confirm('Are you sure you want to delete this text?')) {
+                let row = $(this).closest('tr');
+                let id = row.data('id');
+
+                if (confirm('Are you sure you want to delete this row?')) {
                     $.ajax({
-                        url: '/TextRoller/Delete/' + id,
                         type: 'POST',
+                        url: '/SavingDay/Delete/' + id,
                         data: {
                             __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
                         },
                         success: function () {
-                            location.reload();
+                            row.remove();
+
+                            // Show toast
+                            const toastEl = document.getElementById('deleteToast');
+                            const toast = new bootstrap.Toast(toastEl);
+                            toast.show();
                         },
                         error: function () {
-                            alert('Failed to delete text.');
+                            alert('Failed to delete row.');
                         }
                     });
                 }
+            });
+
+            // Edit button
+            $('.editBtn').click(function () {
+                let id = $(this).data('id');
+                $('#editModal .modal-content').load('/SavingDay/Edit/' + id, function () {
+                    $('#editModal').modal('show');
+                });
             });
         });
     </script>

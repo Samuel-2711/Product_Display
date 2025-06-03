@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Product_Display.Data;
 using Product_Display.Data.Repository.IRepository;
 using Product_Display.Models;
@@ -21,12 +22,24 @@ namespace Product_Display.Controllers
             List<TreasuryBP> objTreasuryBPList = _db.Treasuries.ToList();
             return View(objTreasuryBPList);
         }
+
+
+        // Load all records (AJAX)
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var allRecords = _db.Treasuries.OrderBy(t => t.TenorDays).ToList();
+            return Json(new { data = allRecords });
+        }
+
+        // GET: Load Create modal
+        [HttpGet]
         public IActionResult Create()
         {
             return PartialView("Create", new TreasuryBP());
         }
 
-        // POST: Submit Create Form
+        // POST: Submit Create form
         [HttpPost]
         public IActionResult Create(TreasuryBP obj)
         {
@@ -36,11 +49,13 @@ namespace Product_Display.Controllers
                 _db.SaveChanges();
                 return Json(new { success = true });
             }
+
             return PartialView("Create", obj);
         }
 
-        // GET: Load Edit Modal
-        public IActionResult EditModal(string id)
+        // GET: Load Edit modal
+        [HttpGet]
+        public IActionResult Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
                 return NotFound();
@@ -52,7 +67,7 @@ namespace Product_Display.Controllers
             return PartialView("Edit", obj);
         }
 
-        // POST: Submit Edit Form
+        // POST: Submit Edit form
         [HttpPost]
         public IActionResult Edit(TreasuryBP obj)
         {
@@ -66,20 +81,21 @@ namespace Product_Display.Controllers
             return PartialView("Edit", obj);
         }
 
-        // DELETE: Remove entry
-        [HttpPost]
+        // DELETE: Delete record
+        [HttpDelete]
         public IActionResult Delete(string id)
         {
             var obj = _db.Treasuries.FirstOrDefault(t => t.SecurityId == id);
             if (obj == null)
-                return Json(new { success = false });
+                return Json(new { success = false, message = "Record not found." });
 
             _db.Treasuries.Remove(obj);
             _db.SaveChanges();
-            return Json(new { success = true });
+            return Json(new { success = true, message = "Record deleted successfully." });
         }
     }
 }
+
 
 
  
