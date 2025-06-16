@@ -15,6 +15,7 @@ namespace Product_Display.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.TextRollers = _db.TextRollers.ToList();
             var rollers = _db.TextRollers.ToList();
             return View(rollers);
         }

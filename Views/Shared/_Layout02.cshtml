@@ -1,13 +1,20 @@
-﻿<!DOCTYPE html>
+﻿@using Product_Display.Models
+@inject Product_Display.Data.AppDbContext _db
+@{
+    var textRoller = _db.TextRollers.FirstOrDefault();
+    string marqueeText = textRoller != null ? textRoller.Text.Replace("||", " &nbsp;||&nbsp;") : "Welcome to Treasury Rates";
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
         }
 
         .header {
@@ -15,8 +22,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            border-bottom: 1px solid #ccc;
             background-color: white;
+            border-bottom: 1px solid #ccc;
         }
 
         .datetime {
@@ -28,38 +35,21 @@
             height: 40px;
         }
 
-        .main-container {
-            display: flex;
-        }
-
-        .left-panel {
-            width: 200px;
-            background-color: #e8f0fe;
-            padding: 10px;
-        }
-
-        .content-panel {
-            flex: 1;
-            padding: 20px;
-            background-color: white;
-        }
-
         .footer {
-            background-color: #e8f0fe;
+            background-color: navy;
             padding: 5px 10px;
+            color: white;
+            font-size: 13px;
             text-align: center;
-            font-size: 12px;
-            border-top: 1px solid #ccc;
         }
 
-        marquee {
-            color: #000066;
-            font-weight: bold;
-        }
+            .footer marquee {
+                color: white;
+                font-weight: bold;
+            }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <div class="header">
         <div class="datetime" id="datetime"></div>
         <div class="logo">
@@ -67,25 +57,14 @@
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-container">
-        <!-- Sidebar -->
-        <div class="left-panel">
-            @RenderSection("Sidebar", required: false)
-        </div>
-
-        <!-- Body Content -->
-        <div class="content-panel">
-            @RenderBody()
-        </div>
+    <div class="container-fluid">
+        @RenderBody()
     </div>
 
-    <!-- Footer -->
     <div class="footer">
-        <marquee>Upgrade Your SC Mobile App To Enjoy Our New & Refreshed Services.</marquee>
+        <marquee>@Html.Raw(marqueeText)</marquee>
     </div>
 
-    <!-- Live Time Script -->
     <script>
         function updateTime() {
             const now = new Date();
@@ -96,9 +75,8 @@
             };
             document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
         }
-
         updateTime();
-        setInterval(updateTime, 1000);
+        setInterval(updateTime, 60000);
     </script>
 </body>
 </html>
