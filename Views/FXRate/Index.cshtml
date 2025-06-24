@@ -1,0 +1,59 @@
+﻿@model List<Product_Display.Models.FXRate>
+@{
+    ViewData["Title"] = "FX Rates";
+}
+
+<form method="post" asp-action="UpdateRates">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-success fw-bold">Forex Rates</h2>
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-save-fill"></i> Save Changes
+        </button>
+    </div>
+
+    <div class="row">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-sm border-success h-100">
+                    <div class="card-body">
+                        <input type="hidden" asp-for="@Model[i].Id" />
+
+                        <h5 class="card-title fw-bold text-success">
+                            @Model[i].CurrencyName (@Model[i].Symbol)
+                        </h5>
+
+                        <div class="mb-3">
+                            <label class="form-label">We Buy</label>
+                            <input asp-for="@Model[i].BuyRate" class="form-control text-center fw-bold text-primary" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">We Sell</label>
+                            <input asp-for="@Model[i].SellRate" class="form-control text-center fw-bold text-danger" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label fw-semibold">Trend</label>
+                            <select asp-for="@Model[i].IsUpwardTrend" class="form-select text-center">
+                                <option value="true" selected="@Model[i].IsUpwardTrend">📈 Upward</option>
+                                <option value="false" selected="@(Model[i].IsUpwardTrend == false)">📉 Downward</option>
+                            </select>
+                        </div>
+
+                        <div class="mt-2 text-center">
+                            @if (Model[i].IsUpwardTrend)
+                            {
+                                <span class="text-success fw-bold"><i class="bi bi-caret-up-fill"></i> Up</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger fw-bold"><i class="bi bi-caret-down-fill"></i> Down</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</form>

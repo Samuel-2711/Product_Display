@@ -1,8 +1,11 @@
 ﻿@using Product_Display.Models
 @inject Product_Display.Data.AppDbContext _db
+
 @{
     var textRoller = _db.TextRollers.FirstOrDefault();
     string marqueeText = textRoller != null ? textRoller.Text.Replace("||", " &nbsp;||&nbsp;") : "Welcome to Treasury Rates";
+
+    var savings = _db.SavingDays.OrderBy(s => s.Id).ToList();
 }
 
 <!DOCTYPE html>
@@ -10,18 +13,23 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
     <style>
-        body {
+        html, body {
+            height: 100%;
             margin: 0;
             font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
         }
 
-        .header {
+        .client-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 8px 20px;
             background-color: white;
             border-bottom: 1px solid #ccc;
         }
@@ -35,33 +43,70 @@
             height: 40px;
         }
 
-        .footer {
-            background-color: navy;
-            padding: 5px 10px;
-            color: white;
-            font-size: 13px;
-            text-align: center;
+        .content-wrapper {
+            flex: 1;
+            padding: 0 20px 10px;
         }
 
-            .footer marquee {
-                color: white;
+        .saving-row {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #004085;
+        }
+
+            .saving-row div {
+                flex: 1;
+                text-align: center;
+                border-right: 1px solid #dee2e6;
+            }
+
+                .saving-row div:last-child {
+                    border-right: none;
+                }
+
+        .footer-marquee {
+            background-color: navy;
+            color: white;
+            font-size: 14px;
+            padding: 5px 10px;
+            margin-top: 10px;
+        }
+
+            .footer-marquee marquee {
                 font-weight: bold;
             }
     </style>
 </head>
 <body>
-    <div class="header">
+    <div class="client-header">
         <div class="datetime" id="datetime"></div>
         <div class="logo">
             <img src="~/images/CVimage.png" alt="Standard Chartered" />
         </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="content-wrapper">
         @RenderBody()
     </div>
 
-    <div class="footer">
+    <!-- SavingDay Row Table -->
+    <div class="saving-row">
+        @foreach (var item in savings)
+        {
+            <div>
+                <div>@item.Days</div>
+                <div style="color: green;">@item.Percent.ToString("0.00")%</div>
+            </div>
+        }
+    </div>
+
+    <!-- Marquee Text -->
+    <div class="footer-marquee">
         <marquee>@Html.Raw(marqueeText)</marquee>
     </div>
 
@@ -78,5 +123,7 @@
         updateTime();
         setInterval(updateTime, 60000);
     </script>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

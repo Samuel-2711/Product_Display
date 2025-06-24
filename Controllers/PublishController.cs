@@ -21,7 +21,7 @@ namespace Product_Display.Controllers
         {
             var viewModel = new PublishVM
             {
-                ForexRates = await _db.ForexRates.ToListAsync(),
+                FXRates = await _db.FXRates.ToListAsync(),
                 FGNBonds = await _db.FGNBonds.ToListAsync(),
                 Treasuries = await _db.Treasuries.ToListAsync()
             };
@@ -34,12 +34,12 @@ namespace Product_Display.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PublishAll()
         {
-            var forexRates = await _db.ForexRates.ToListAsync();
+            var fxRates = await _db.FXRates.ToListAsync();
             var fGNBonds = await _db.FGNBonds.ToListAsync();
             var treasuries = await _db.Treasuries.ToListAsync();
 
-            foreach (var f in forexRates)
-                f.Published = true;
+            foreach (var f in fxRates)
+               
 
             foreach (var e in fGNBonds)
                 e.Published = true;
@@ -57,12 +57,10 @@ namespace Product_Display.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ClientForex()
         {
-            var forexRates = await _db.ForexRates
-                .Where(f => f.Published)
-                .ToListAsync();
-
-            return View(forexRates);
+            var fxRates = await _db.FXRates.ToListAsync();
+            return View(fxRates);
         }
+
 
         [AllowAnonymous]
         public async Task<IActionResult> ClientBonds()

@@ -11,6 +11,7 @@
             </div>
         </div>
     </div>
+
     <div class="card-body p-4">
         <div class="row pb-3">
             <div class="col-6"></div>
@@ -21,7 +22,7 @@
             </div>
         </div>
 
-        <table class="table table-striped table-borderless">
+        <table class="table table-striped table-borderless" id="bondTable">
             <thead>
                 <tr>
                     <th>ISIN</th>
@@ -53,56 +54,15 @@
                             }
                         </td>
                         <td>
-                            <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal-@item.ISIN">Edit</button>
+                            <button class="btn btn-sm btn-primary editBtn" data-id="@item.ISIN">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </button>
+
+                            <button class="btn btn-sm btn-danger deleteBtn ms-1" data-id="@item.ISIN">
+                                <i class="bi bi-trash-fill"></i> Delete
+                            </button>
                         </td>
                     </tr>
-
-                    <!-- Edit Modal -->
-                    <div class="modal fade" id="editModal-@item.ISIN" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <form method="post" asp-action="Upsert">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Edit Bond</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <input type="hidden" asp-for="FGNBond.ISIN" value="@item.ISIN" />
-                                        <input type="hidden" name="FGNBond.ISIN" value="@item.ISIN" />
-
-                                        <div class="mb-3">
-                                            <label asp-for="FGNBond.Security" class="form-label"></label>
-                                            <input asp-for="FGNBond.Security" class="form-control" name="FGNBond.Security" value="@item.Security" />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label asp-for="FGNBond.Maturity" class="form-label"></label>
-                                            <input asp-for="FGNBond.Maturity" class="form-control" name="FGNBond.Maturity" type="date" value="@item.Maturity.ToString("yyyy-MM-dd")" />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label asp-for="FGNBond.YearsToMaturity" class="form-label"></label>
-                                            <input asp-for="FGNBond.YearsToMaturity" class="form-control" name="FGNBond.YearsToMaturity" value="@item.YearsToMaturity" />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label asp-for="FGNBond.Price" class="form-label"></label>
-                                            <input asp-for="FGNBond.Price" class="form-control" name="FGNBond.Price" value="@item.Price" />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label asp-for="FGNBond.YieldToMaturity" class="form-label"></label>
-                                            <input asp-for="FGNBond.YieldToMaturity" class="form-control" name="FGNBond.YieldToMaturity" value="@item.YieldToMaturity" />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label asp-for="FGNBond.Coupon" class="form-label"></label>
-                                            <input asp-for="FGNBond.Coupon" class="form-control" name="FGNBond.Coupon" value="@item.Coupon" />
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-success">Save</button>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 }
             </tbody>
         </table>
@@ -110,49 +70,18 @@
 </div>
 
 <!-- Create Modal -->
-<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="post" asp-action="Upsert">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Bond</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label asp-for="FGNBond.ISIN" class="form-label"></label>
-                        <input asp-for="FGNBond.ISIN" class="form-control" />
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="FGNBond.Maturity" class="form-label"></label>
-                        <input asp-for="FGNBond.Maturity" class="form-control" type="date" />
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="FGNBond.YearsToMaturity" class="form-label"></label>
-                        <input asp-for="FGNBond.YearsToMaturity" class="form-control" />
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="FGNBond.Price" class="form-label"></label>
-                        <input asp-for="FGNBond.Price" class="form-control" />
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="FGNBond.YieldToMaturity" class="form-label"></label>
-                        <input asp-for="FGNBond.YieldToMaturity" class="form-control" />
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="FGNBond.Coupon" class="form-label"></label>
-                        <input asp-for="FGNBond.Coupon" class="form-control" />
-                    </div>
-                    <div class="mb-3">
-                        <label asp-for="FGNBond.Security" class="form-label"></label>
-                        <input asp-for="FGNBond.Security" class="form-control" />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Save</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </form>
+@await Html.PartialAsync("_CreateModal", Model.FGNBond)
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="editModalContent">
+            <!-- Edit modal content will be loaded here by AJAX -->
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/fgnbond.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

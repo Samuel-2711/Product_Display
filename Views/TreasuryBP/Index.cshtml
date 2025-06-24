@@ -62,14 +62,15 @@
 <!-- Include Create Partial View -->
 @await Html.PartialAsync("Create", new TreasuryBP())
 
-<!-- Edit Modal -->
+<!-- Edit Modal Container -->
 <div id="editModal" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- AJAX content for Edit modal will be loaded here -->
+        <div class="modal-content" id="editModalContent">
+            <!-- AJAX-loaded edit form goes here -->
         </div>
     </div>
 </div>
+
 
 <!-- Anti-forgery token -->
 @Html.AntiForgeryToken()

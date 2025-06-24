@@ -17,80 +17,75 @@ namespace Product_Display.Controllers
             _db = db;
         }
 
-        // List all FGN Bonds
         public IActionResult Index()
         {
-            var viewModel = new FGNBondVM
+            var vm = new FGNBondVM
             {
                 FGNBonds = _db.FGNBonds.ToList(),
-                FGNBond = new FGNBond()  // For Create modal binding
+                FGNBond = new FGNBond()
             };
-            return View(viewModel);
+            return View(vm);
         }
 
-        // POST: Create a new FGNBond
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var bonds = _db.FGNBonds.ToList();
+            return Json(new { data = bonds });
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return PartialView("_CreateModal", new FGNBond());
+        }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Create(FGNBond bond)
         {
             if (ModelState.IsValid)
             {
-                var existing = _db.FGNBonds.FirstOrDefault(f => f.ISIN == bond.ISIN);
-                if (existing != null)
-                {
-                    ModelState.AddModelError("ISIN", "An FGNBond with this ISIN already exists.");
-                }
-                else
-                {
-                    _db.FGNBonds.Add(bond);
-                    _db.SaveChanges();
-                    return RedirectToAction(nameof(Index));
-                }
+                _db.FGNBonds.Add(bond);
+                _db.SaveChanges();
+                return Json(new { success = true });
             }
-
-            // If invalid, reload index with model errors
-            var vm = new FGNBondVM
-            {
-                FGNBonds = _db.FGNBonds.ToList(),
-                FGNBond = bond
-            };
-            return View("Index", vm);
+            return PartialView("_CreateModal", bond);
         }
 
-        // POST: Edit an existing FGNBond
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return NotFound();
+            var bond = _db.FGNBonds.FirstOrDefault(f => f.ISIN == id);
+            if (bond == null) return NotFound();
+            return PartialView("_EditModal", bond);
+        }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Edit(FGNBond bond)
         {
             if (ModelState.IsValid)
             {
-                var existing = _db.FGNBonds.FirstOrDefault(f => f.ISIN == bond.ISIN);
-                if (existing == null)
-                {
-                    return NotFound();
-                }
-
-                existing.Security = bond.Security;
-                existing.Maturity = bond.Maturity;
-                existing.YearsToMaturity = bond.YearsToMaturity;
-                existing.Price = bond.Price;
-                existing.YieldToMaturity = bond.YieldToMaturity;
-                existing.Coupon = bond.Coupon;
-                existing.Published = bond.Published;
-
-                _db.FGNBonds.Update(existing);
+                _db.FGNBonds.Update(bond);
                 _db.SaveChanges();
+                return Json(new { success = true });
+            }
+            return PartialView("_EditModal", bond);
+        }
 
-                return RedirectToAction(nameof(Index));
+        [HttpPost]
+        public IActionResult Delete(string id)
+        {
+            var bond = _db.FGNBonds.FirstOrDefault(f => f.ISIN == id);
+            if (bond == null)
+            {
+                return Json(new { success = false, message = "Bond not found" });
             }
 
-            // If invalid, reload index with errors
-            var vm = new FGNBondVM
-            {
-                FGNBonds = _db.FGNBonds.ToList(),
-                FGNBond = bond
-            };
-            return View("Index", vm);
+            _db.FGNBonds.Remove(bond);
+            _db.SaveChanges();
+            return Json(new { success = true });
         }
+
     }
 }

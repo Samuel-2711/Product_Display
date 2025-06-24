@@ -6,19 +6,22 @@ using Product_Display.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Product_Display.Utilities;
+using Product_Display.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Product_Display.Controllers
 {
     [Authorize(Roles = SD.Role_Checker)]
     public class UserController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
-        public UserController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly AppDbContext _db;
+        public UserController(UserManager<ApplicationUser> userManager, AppDbContext db, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _db = db;
         }
 
         public async Task<IActionResult> Index()
@@ -77,39 +80,49 @@ namespace Product_Display.Controllers
         {
             var users = await _userManager.Users.ToListAsync();
 
-            var userList = new List<ApplicationUser>();
+            var userList = new List<UserVM>();
 
             foreach (var user in users)
             {
-                var appUser = (ApplicationUser)user;
-                appUser.CustomRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? "None";
-                userList.Add(appUser);
+                var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? "None";
+
+                userList.Add(new UserVM
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,         
+                    Email = user.Email,
+                    Role = role
+                });
             }
 
             return Json(new { data = userList });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> LockUnlock([FromBody] string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-                return Json(new { success = false, message = "User not found" });
 
-            if (user.LockoutEnd != null && user.LockoutEnd > DateTime.Now)
+
+
+        [HttpPost]
+        public IActionResult LockUnlock([FromBody] string id)
+        {
+
+            var objFromDb = _db.Users.FirstOrDefault(u => u.Id == id);
+            if (objFromDb == null)
             {
-                // unlock user
-                user.LockoutEnd = DateTime.Now;
+                return Json(new { success = false, message = "Error while Locking/Unlocking" });
+            }
+
+            if (objFromDb.LockoutEnd != null && objFromDb.LockoutEnd > DateTime.Now)
+            {
+                //user is currently locked and we need to unlock them
+                objFromDb.LockoutEnd = DateTime.Now;
             }
             else
             {
-                // lock user
-                user.LockoutEnd = DateTime.Now.AddYears(1000);
+                objFromDb.LockoutEnd = DateTime.Now.AddYears(1000);
             }
-
-            await _userManager.UpdateAsync(user);
-
-            return Json(new { success = true, message = "Operation successful" });
+            _db.Users.Update(objFromDb);
+            _db.SaveChanges();
+            return Json(new { success = true, message = "Operation Successful" });
         }
 
         #endregion

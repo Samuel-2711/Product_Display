@@ -82,7 +82,8 @@ namespace Product_Display.Controllers
         }
 
         // DELETE: Delete record
-        [HttpDelete]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(string id)
         {
             var obj = _db.Treasuries.FirstOrDefault(t => t.SecurityId == id);

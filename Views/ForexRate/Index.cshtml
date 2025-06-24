@@ -1,6 +1,8 @@
-﻿@model Product_Display.Models.View_Model.ForexRateVM
+﻿@page
+@model Product_Display.Models.View_Model.ForexRateVM
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <style>
     .forex-card {
@@ -8,8 +10,37 @@
         border-radius: 10px;
         padding: 20px;
         text-align: center;
-        background-color: #f9f9f9;
         height: 100%;
+    }
+
+    .card-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .card-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .card-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .card-warning {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .card-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .card-danger {
+        background-color: #dc3545;
+        color: white;
     }
 
     .forex-title {
@@ -17,13 +48,8 @@
         font-size: 1.25rem;
     }
 
-    .forex-symbol {
-        font-size: 0.9rem;
-        color: gray;
-    }
-
     .forex-arrow {
-        color: green;
+        color: #28a745;
         font-weight: bold;
     }
 
@@ -39,6 +65,7 @@
         font-weight: 500;
         background: transparent;
         width: 100%;
+        color: inherit;
     }
 
         .rate-input:focus {
@@ -48,36 +75,215 @@
 </style>
 
 <div class="container mt-4">
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        @foreach (var rate in Model.Rates)
-        {
+    <form id="forexForm" asp-action="BulkUpdate" method="post">
+        <button type="submit" class="btn btn-primary mb-4">Save</button>
+        <h2 class="text-center mb-4">FOREX RATES Against Naira</h2>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
             <div class="col">
-                <div class="forex-card">
-                    <div class="forex-title text-primary">
-                        @rate.CurrencyName <span class="forex-symbol">@rate.Symbol</span>
-                        @if (rate.IsUpwardTrend)
-                        {
-                            <span class="forex-arrow">▲</span>
-                        }
+                <div class="forex-card card-primary">
+                    <div class="forex-title">US Dollar USD</div>
+                    <input type="hidden" name="Rates[0].Id" value="1" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[0].BuyRate" class="rate-input" value="1,566.66" />
                     </div>
-
-                    <form asp-action="Update" method="post">
-                        <input type="hidden" name="Id" value="@rate.Id" />
-
-                        <div class="mt-3">
-                            <div class="rate-label text-primary">We Buy</div>
-                            <input type="text" name="BuyRate" class="rate-input" value="@rate.BuyRate" />
-                        </div>
-
-                        <div class="mt-3">
-                            <div class="rate-label text-primary">We Sell</div>
-                            <input type="text" name="SellRate" class="rate-input" value="@rate.SellRate" />
-                        </div>
-
-                        <button type="submit" class="btn btn-sm btn-outline-primary mt-3">Save</button>
-                    </form>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[0].SellRate" class="rate-input" value="1,649.95" />
+                    </div>
+                    <span class="forex-arrow">▲ 1.4%</span>
                 </div>
             </div>
-        }
-    </div>
+            <div class="col">
+                <div class="forex-card card-success">
+                    <div class="forex-title">Pound GBP</div>
+                    <input type="hidden" name="Rates[1].Id" value="2" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[1].BuyRate" class="rate-input" value="2,168.00" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[1].SellRate" class="rate-input" value="2,174.60" />
+                    </div>
+                    <span class="forex-arrow">▲ 2.7%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-info">
+                    <div class="forex-title">Euro EUR</div>
+                    <input type="hidden" name="Rates[2].Id" value="3" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[2].BuyRate" class="rate-input" value="1,751.59" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[2].SellRate" class="rate-input" value="1,852.22" />
+                    </div>
+                    <span class="forex-arrow">▲ 1.9%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-warning">
+                    <div class="forex-title">UAE Dirham AED</div>
+                    <input type="hidden" name="Rates[3].Id" value="4" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[3].BuyRate" class="rate-input" value="421.74" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[3].SellRate" class="rate-input" value="442.48" />
+                    </div>
+                    <span class="forex-arrow">▲ 8.0%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-secondary">
+                    <div class="forex-title">Canadian CAD</div>
+                    <input type="hidden" name="Rates[4].Id" value="5" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[4].BuyRate" class="rate-input" value="1,116.92" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[4].SellRate" class="rate-input" value="1,219.49" />
+                    </div>
+                    <span class="forex-arrow">▲ 7.1%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-danger">
+                    <div class="forex-title">South African Rand ZAR</div>
+                    <input type="hidden" name="Rates[5].Id" value="6" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[5].BuyRate" class="rate-input" value="82.97" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[5].SellRate" class="rate-input" value="87.14" />
+                    </div>
+                    <span class="forex-arrow">▲ 5.0%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-primary">
+                    <div class="forex-title">Chinese Yuan CNY</div>
+                    <input type="hidden" name="Rates[6].Id" value="7" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[6].BuyRate" class="rate-input" value="211.92" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[6].SellRate" class="rate-input" value="217.49" />
+                    </div>
+                    <span class="forex-arrow">▲ 2.1%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-info">
+                    <div class="forex-title">Hong Kong Dollar HKD</div>
+                    <input type="hidden" name="Rates[7].Id" value="8" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[7].BuyRate" class="rate-input" value="199.74" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[7].SellRate" class="rate-input" value="204.48" />
+                    </div>
+                    <span class="forex-arrow">▲ 3.2%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-success">
+                    <div class="forex-title">Australian Dollar AUD</div>
+                    <input type="hidden" name="Rates[8].Id" value="9" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[8].BuyRate" class="rate-input" value="1,050.00" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[8].SellRate" class="rate-input" value="1,100.00" />
+                    </div>
+                    <span class="forex-arrow">▲ 4.5%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-warning">
+                    <div class="forex-title">Swiss Franc CHF</div>
+                    <input type="hidden" name="Rates[9].Id" value="10" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[9].BuyRate" class="rate-input" value="1,600.00" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[9].SellRate" class="rate-input" value="1,650.00" />
+                    </div>
+                    <span class="forex-arrow">▲ 2.8%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-secondary">
+                    <div class="forex-title">Singapore Dollar SGD</div>
+                    <input type="hidden" name="Rates[10].Id" value="11" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[10].BuyRate" class="rate-input" value="1,200.00" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[10].SellRate" class="rate-input" value="1,250.00" />
+                    </div>
+                    <span class="forex-arrow">▲ 3.5%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="forex-card card-danger">
+                    <div class="forex-title">Japanese Yen JPY</div>
+                    <input type="hidden" name="Rates[11].Id" value="12" />
+                    <div class="mt-3">
+                        <div class="rate-label">We Buy</div>
+                        <input type="text" name="Rates[11].BuyRate" class="rate-input" value="10.50" />
+                    </div>
+                    <div class="mt-3">
+                        <div class="rate-label">We Sell</div>
+                        <input type="text" name="Rates[11].SellRate" class="rate-input" value="11.00" />
+                    </div>
+                    <span class="forex-arrow">▲ 6.0%</span>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#forexForm').on('submit', function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        alert('Rates updated successfully!');
+                        location.reload();
+                    } else {
+                        alert('Error updating rates.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred.');
+                }
+            });
+        });
+    });
+</script>

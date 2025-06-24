@@ -1,58 +1,6 @@
-﻿$(document).on('click', '.editBtn', function () {
-    var id = $(this).data('id');
-    $.get('/TreasuryBP/Edit/' + id, function (data) {
-        $('#editModal .modal-content').html(data);
-        $('#editModal').modal('show');
-    });
-});
+﻿$(document).ready(function () {
 
-    // Delete record
-    $('#treasuryTable').on('click', '.deleteBtn', function () {
-        let id = $(this).data('id');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This action cannot be undone!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '/TreasuryBP/Delete',
-                    type: 'POST',
-                    data: { id: id }, // Send ID in POST body
-                    success: function (response) {
-                        if (response.success) {
-                            Swal.fire(
-                                'Deleted!',
-                                response.message,
-                                'success'
-                            );
-                            refreshTable();
-                        } else {
-                            Swal.fire(
-                                'Error!',
-                                response.message,
-                                'error'
-                            );
-                        }
-                    },
-                    error: function () {
-                        Swal.fire(
-                            'Error!',
-                            'There was a problem deleting the record.',
-                            'error'
-                        );
-                    }
-                });
-            }
-        });
-    });
-
-
-    // Handle Create form submit
+    // CREATE
     $('#createForm').submit(function (e) {
         e.preventDefault();
         var form = $(this);
@@ -77,8 +25,18 @@
         });
     });
 
-    // Handle Edit form submit (dynamic form)
-    $('#editModalContent').on('submit', '#editForm', function (e) {
+    // EDIT - OPEN MODAL
+    $(document).on('click', '.editBtn', function () {
+        var id = $(this).data('id');
+        $.get('/TreasuryBP/Edit/' + id, function (data) {
+            $('#editModalContent').html(data);
+            var editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            editModal.show();
+        });
+    });
+
+    // EDIT - SUBMIT FORM
+    $(document).on('submit', '#editForm', function (e) {
         e.preventDefault();
         var form = $(this);
         $.ajax({
@@ -88,8 +46,8 @@
             success: function (response) {
                 if (response.success) {
                     toastr.success('Record updated successfully.');
-                    var editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-                    editModal.hide();
+                    var modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+                    modal.hide();
                     refreshTable();
                 } else {
                     $('#editModalContent').html(response);
@@ -101,12 +59,49 @@
         });
     });
 
+    // DELETE
+    $('#treasuryTable').on('click', '.deleteBtn', function () {
+        let id = $(this).data('id');
+        const token = $('input[name="__RequestVerificationToken"]').val();
 
-    // Refresh table by reloading from server
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/TreasuryBP/Delete',
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: token,
+                        id: id
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire('Deleted!', response.message, 'success');
+                            refreshTable();
+                        } else {
+                            Swal.fire('Error!', response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('Error!', 'There was a problem deleting the record.', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+    // REFRESH TABLE
     function refreshTable() {
         $.get('/TreasuryBP/GetAll', function (data) {
             var tbody = '';
-            data.forEach(function (item) {
+            data.data.forEach(function (item) {
                 tbody += `<tr data-id="${item.securityId}">
                     <td>${item.maturity}</td>
                     <td>${item.securityId}</td>

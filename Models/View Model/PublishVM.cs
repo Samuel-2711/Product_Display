@@ -2,7 +2,7 @@
 {
     public class PublishVM
     {
-        public List<ForexRate> ForexRates { get; set; }
+        public List<FXRate> FXRates { get; set; }
         public List<TreasuryBP> Treasuries { get; set; }
         public List<FGNBond> FGNBonds { get; set; }
     }

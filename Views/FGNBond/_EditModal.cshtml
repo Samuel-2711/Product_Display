@@ -1,0 +1,47 @@
+﻿@model FGNBond
+
+            <form asp-action="Edit" method="post" id="editForm">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="editModalLabel">Edit FGN Bond</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="ISIN" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Maturity" class="form-label"></label>
+                        <input asp-for="Maturity" type="date" class="form-control" />
+                        <span asp-validation-for="Maturity" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="YearsToMaturity" class="form-label"></label>
+                        <input asp-for="YearsToMaturity" class="form-control" />
+                        <span asp-validation-for="YearsToMaturity" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Price" class="form-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="YieldToMaturity" class="form-label"></label>
+                        <input asp-for="YieldToMaturity" class="form-control" />
+                        <span asp-validation-for="YieldToMaturity" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Coupon" class="form-label"></label>
+                        <input asp-for="Coupon" class="form-control" />
+                        <span asp-validation-for="Coupon" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Security" class="form-label"></label>
+                        <input asp-for="Security" class="form-control" />
+                        <span asp-validation-for="Security" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>

@@ -17,13 +17,13 @@ namespace Product_Display.Controllers
         {
             _db = db;
         }
+
         public async Task<IActionResult> Index()
         {
             var viewModel = new ForexRateVM
             {
-                Rates = _db.ForexRates.ToList()
+                Rates = await _db.ForexRates.ToListAsync()
             };
-
             return View(viewModel);
         }
 
@@ -36,8 +36,44 @@ namespace Product_Display.Controllers
             {
                 _db.Add(forexRate);
                 await _db.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            return View(forexRate);
+        }
+
+        // BULK UPDATE: Update multiple forex rates
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BulkUpdate(List<ForexRate> rates)
+        {
+            if (rates == null || !rates.Any())
+            {
+                return Json(new { success = false });
+            }
+
+            try
+            {
+                foreach (var rate in rates)
+                {
+                    var existingRate = await _db.ForexRates.FindAsync(rate.Id);
+                    if (existingRate != null)
+                    {
+                        existingRate.BuyRate = rate.BuyRate;
+                        existingRate.SellRate = rate.SellRate;
+                    }
+                }
+                await _db.SaveChangesAsync();
+                return Json(new { success = true });
+            }
+            catch (DbUpdateException)
+            {
+                return Json(new { success = false });
+            }
+        }
+
+        private bool ForexRateExists(int id)
+        {
+            return _db.ForexRates.Any(e => e.Id == id);
         }
     }
 }

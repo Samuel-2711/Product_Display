@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
-        "ajax": { url: '/user/getall' },
+        "ajax": { url: '/User/GetAll' },
         "columns": [
             { "data": "userName", "width": "30%" },
             { "data": "email", "width": "30%" },
@@ -23,22 +23,20 @@ function loadDataTable() {
                             <a onclick="LockUnlock('${data.id}')" class="btn btn-danger text-white" style="cursor:pointer; width:100px;">
                                 <i class="bi bi-lock-fill"></i> Lock
                             </a>
-                            <a href="/user/RoleManagement?userId=${data.id}" class="btn btn-secondary text-white" style="cursor:pointer; width:150px;">
+                            <a href="/User/RoleManagement?userId=${data.id}" class="btn btn-secondary text-white" style="cursor:pointer; width:150px;">
                                 <i class="bi bi-pencil-square"></i> Permission
                             </a>
-                        </div>
-                        `;
+                        </div>`;
                     } else {
                         return `
                         <div class="text-center">
                             <a onclick="LockUnlock('${data.id}')" class="btn btn-success text-white" style="cursor:pointer; width:100px;">
                                 <i class="bi bi-unlock-fill"></i> UnLock
                             </a>
-                            <a href="/user/RoleManagement?userId=${data.id}" class="btn btn-secondary text-white" style="cursor:pointer; width:150px;">
+                            <a href="/User/RoleManagement?userId=${data.id}" class="btn btn-secondary text-white" style="cursor:pointer; width:150px;">
                                 <i class="bi bi-pencil-square"></i> Permission
                             </a>
-                        </div>
-                        `;
+                        </div>`;
                     }
                 },
                 "width": "20%"
