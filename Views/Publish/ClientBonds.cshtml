@@ -1,0 +1,82 @@
+﻿@model List<Product_Display.Models.FGNBond>
+@inject Product_Display.Data.AppDbContext _db
+
+@{
+    Layout = "_Layout02";
+    ViewData["Title"] = "FGN Bond Prices";
+    var fxRates = _db.FXRates.Take(6).ToList(); // Only first 6 FX rates
+}
+
+<div class="container-fluid mt-3">
+    <div class="row">
+        <!-- Sidebar: FX Rates in a vertical single column -->
+        <div class="col-md-2">
+            <h6 class="text-primary text-center fw-bold">Forex Summary</h6>
+            <div class="row">
+                @foreach (var fx in fxRates)
+                {
+                    <div class="col-12 mb-2">
+                        <div class="card text-center shadow-sm border-success" style="font-size: 12px;">
+                            <div class="card-header p-1 fw-bold text-success bg-light">
+                                @fx.CurrencyName (@fx.Symbol)
+                                @if (fx.IsUpwardTrend)
+                                {
+                                    <span class="text-success">▲</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">▼</span>
+                                }
+                            </div>
+                            <div class="card-body p-1">
+                                <div class="text-muted">We Buy</div>
+                                <div class="fw-bold">@fx.BuyRate.ToString("N2")</div>
+                                <div class="text-muted">We Sell</div>
+                                <div class="fw-bold">@fx.SellRate.ToString("N2")</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Bond Table Body -->
+        <div class="col-md-10">
+            <h5 class="text-center text-primary fw-bold mb-3">FGN Bond Prices</h5>
+            <div class="table-responsive">
+                <table class="table table-borderless table-sm text-center" style="font-size: 13px;">
+                    <thead>
+                        <tr class="text-success fw-bold border-bottom border-success">
+                            <th>ISIN Code</th>
+                            <th>Maturity</th>
+                            <th>Years To Maturity</th>
+                            <th>WMPS Prices</th>
+                            <th>Yield To Maturity</th>
+                            <th>Coupon</th>
+                            <th>Security</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var bond in Model)
+                        {
+                            <tr>
+                                <td>@bond.ISIN</td>
+                                <td>@bond.Maturity.ToString("dd-MMM-yy")</td>
+                                <td>@bond.YearsToMaturity.ToString("0.00")</td>
+                                <td>@bond.Price.ToString("0.00")</td>
+                                <td>@bond.YieldToMaturity.ToString("0.00")%</td>
+                                <td>@bond.Coupon.ToString("0.00")%</td>
+                                <td>@bond.Security</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/clientview.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

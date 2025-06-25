@@ -1,0 +1,42 @@
+﻿@model List<Product_Display.Models.FXRate>
+
+@{
+    ViewData["Title"] = "Forex Rates Against Naira";
+    Layout = "_Layout02";
+}
+
+<div class="container-fluid mt-3">
+    <h5 class="text-center text-primary fw-bold mb-3">FOREX Rates Against Naira</h5>
+
+    <div class="row">
+        @foreach (var fx in Model)
+        {
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card text-center border-secondary shadow-sm" style="font-size: 13px;">
+                    <div class="card-header p-1 fw-bold text-success bg-light">
+                        @fx.CurrencyName @fx.Symbol
+                        @if (fx.IsUpwardTrend)
+                        {
+                            <span class="text-success">▲</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">▼</span>
+                        }
+                    </div>
+                    <div class="card-body p-2">
+                        <div class="text-muted">We Buy</div>
+                        <div class="fw-bold">@fx.BuyRate.ToString("N2")</div>
+                        <div class="text-muted">We Sell</div>
+                        <div class="fw-bold">@fx.SellRate.ToString("N2")</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/clientview.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,99 @@
+﻿@model Product_Display.Models.View_Model.PublishVM
+@{
+    ViewData["Title"] = "Publish Dashboard";
+}
+
+<div class="container-fluid mt-4">
+    <h2 class="text-center fw-bold mb-4" style="color: #005BAC;">Publish Dashboard</h2>
+
+    <form asp-action="PublishAll" method="post" class="text-end mb-4">
+        <button type="submit" class="btn text-white px-4 py-2" style="background-color: #00843D;">
+            ✅ Publish All to Client View
+        </button>
+    </form>
+
+    <!-- Forex Rates Table -->
+    <h4 class="fw-semibold mb-2" style="color: #005BAC;">Forex Rates</h4>
+    <div class="table-responsive mb-5">
+        <table class="table table-bordered table-sm text-center">
+            <thead style="background-color: #e9f5ed;">
+                <tr style="color: #00843D;">
+                    <th>Currency</th>
+                    <th>Symbol</th>
+                    <th>Buy Rate</th>
+                    <th>Sell Rate</th>
+                    <th>Published?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rate in Model.FXRates)
+                {
+                    <tr>
+                        <td>@rate.CurrencyName</td>
+                        <td>@rate.Symbol</td>
+                        <td>@rate.BuyRate</td>
+                        <td>@rate.SellRate</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FGNBonds Table -->
+    <h4 class="fw-semibold mb-2" style="color: #005BAC;">FGN Bonds</h4>
+    <div class="table-responsive mb-5">
+        <table class="table table-bordered table-sm text-center">
+            <thead style="background-color: #e9f5ed;">
+                <tr style="color: #00843D;">
+                    <th>ISIN Code</th>
+                    <th>Maturity</th>
+                    <th>Years to Maturity</th>
+                    <th>Coupon</th>
+                    <th>Security</th>
+                    <th>Published?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bond in Model.FGNBonds)
+                {
+                    <tr>
+                        <td>@bond.ISIN</td>
+                        <td>@bond.Maturity.ToShortDateString()</td>
+                        <td>@bond.YearsToMaturity</td>
+                        <td>@bond.Coupon</td>
+                        <td>@bond.Security</td>
+                        <td>@bond.Published</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Treasuries Table -->
+    <h4 class="fw-semibold mb-2" style="color: #005BAC;">Treasuries</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm text-center">
+            <thead style="background-color: #e9f5ed;">
+                <tr style="color: #00843D;">
+                    <th>Maturity</th>
+                    <th>Security ID</th>
+                    <th>Tenor (Days)</th>
+                    <th>Discount (%)</th>
+                    <th>Published?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.Treasuries)
+                {
+                    <tr>
+                        <td>@t.Maturity</td>
+                        <td>@t.SecurityId</td>
+                        <td>@t.TenorDays</td>
+                        <td>@t.DiscountPercentage</td>
+                        <td>@t.Published</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

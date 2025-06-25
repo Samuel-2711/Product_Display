@@ -1,0 +1,78 @@
+﻿@model List<Product_Display.Models.TreasuryBP>
+@inject Product_Display.Data.AppDbContext _db
+
+@{
+    ViewData["Title"] = "Treasury Bills";
+    Layout = "_Layout02";
+
+    var fxRates = _db.FXRates.Take(6).ToList();
+}
+
+<div class="container-fluid px-2 py-2 bg-white">
+    <h5 class="text-center fw-bold mb-3" style="color: green;">Treasury Bill Prices</h5>
+
+    <div class="row gx-3">
+        <!-- Sidebar: FX Rates in vertical column -->
+        <div class="col-md-3">
+            <h6 class="text-success text-center fw-bold">Forex Summary</h6>
+            <div class="d-flex flex-column align-items-center">
+                @foreach (var fx in fxRates)
+                {
+                    <div class="mb-2" style="width: 85%;">
+                        <div class="card text-center shadow-sm border-success" style="font-size: 12px;">
+                            <div class="card-header p-1 fw-bold text-success bg-light">
+                                @fx.CurrencyName (@fx.Symbol)
+                                @if (fx.IsUpwardTrend)
+                                {
+                                    <span class="text-success">▲</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">▼</span>
+                                }
+                            </div>
+                            <div class="card-body p-1">
+                                <div class="text-muted">We Buy</div>
+                                <div class="fw-bold">@fx.BuyRate.ToString("N2")</div>
+                                <div class="text-muted">We Sell</div>
+                                <div class="fw-bold">@fx.SellRate.ToString("N2")</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Treasury Table -->
+        <div class="col-md-9">
+            <div class="table-responsive">
+                <table class="table table-sm table-borderless text-center" style="font-size: 13px;">
+                    <thead>
+                        <tr class="text-success fw-bold border-bottom border-success text-uppercase">
+                            <th>MATURITY</th>
+                            <th>SECURITY ID</th>
+                            <th>TENOR (DAYS)</th>
+                            <th>DISC (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="border-bottom">
+                                <td>@item.Maturity</td>
+                                <td>@item.SecurityId</td>
+                                <td>@item.TenorDays</td>
+                                <td>@item.DiscountPercentage.ToString("0.00")%</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/clientview.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}
