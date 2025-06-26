@@ -14,7 +14,6 @@ namespace Product_Display.Data
         }
         public DbSet<TreasuryBP> Treasuries { get; set; }
         public DbSet<FGNBond> FGNBonds { get; set; }
-        public DbSet<ForexRate>ForexRates {  get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<SavingDay> SavingDays { get; set; }
         public DbSet<FXRate> FXRates { get; set; } 

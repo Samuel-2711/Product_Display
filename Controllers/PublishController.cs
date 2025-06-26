@@ -23,7 +23,9 @@ namespace Product_Display.Controllers
             {
                 FXRates = await _db.FXRates.ToListAsync(),
                 FGNBonds = await _db.FGNBonds.ToListAsync(),
-                Treasuries = await _db.Treasuries.ToListAsync()
+                Treasuries = await _db.Treasuries.ToListAsync(),
+                SavingDays = await _db.SavingDays.ToListAsync(),           
+                TextRollers = await _db.TextRollers.ToListAsync()
             };
 
             return View(viewModel);
@@ -49,6 +51,7 @@ namespace Product_Display.Controllers
 
             await _db.SaveChangesAsync();
 
+            TempData["success"] = "Published successfully";
             return RedirectToAction("Index"); // Optional redirect
         }
 

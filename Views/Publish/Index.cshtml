@@ -71,7 +71,7 @@
 
     <!-- Treasuries Table -->
     <h4 class="fw-semibold mb-2" style="color: #005BAC;">Treasuries</h4>
-    <div class="table-responsive">
+    <div class="table-responsive mb-5">
         <table class="table table-bordered table-sm text-center">
             <thead style="background-color: #e9f5ed;">
                 <tr style="color: #00843D;">
@@ -96,4 +96,63 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Saving Days Table -->
+    <h4 class="fw-semibold mb-2" style="color: #005BAC;">Saving Days</h4>
+    <div class="table-responsive mb-5">
+        <table class="table table-bordered table-sm text-center">
+            <thead style="background-color: #e9f5ed;">
+                <tr style="color: #00843D;">
+                    <th>ID</th>
+                    <th>Days</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sd in Model.SavingDays)
+                {
+                    <tr>
+                        <td>@sd.Id</td>
+                        <td>@sd.Days</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Text Roller Table -->
+    <h4 class="fw-semibold mb-2" style="color: #005BAC;">Text Roller</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm text-center">
+            <thead style="background-color: #e9f5ed;">
+                <tr style="color: #00843D;">
+                    <th>ID</th>
+                    <th>Text</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var text in Model.TextRollers)
+                {
+                    <tr>
+                        <td>@text.Id</td>
+                        <td>@text.Text</td>td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            var successMessage = '@TempData["Success"]';
+            if (successMessage) {
+                toastr.success(successMessage, 'Success', {
+                    closeButton: true,
+                    progressBar: true,
+                    timeOut: 4000
+                });
+            }
+        });
+    </script>
+}

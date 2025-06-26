@@ -1,26 +1,28 @@
-﻿// wwwroot/js/clientview.js
-
-document.addEventListener("DOMContentLoaded", function () {
-    const routes = [
+﻿document.addEventListener("DOMContentLoaded", function () {
+    const pages = [
         "/Publish/ClientTreasuries",
         "/Publish/ClientForex",
         "/Publish/ClientBonds"
     ];
 
-    const currentPath = window.location.pathname;
-    const currentIndex = routes.indexOf(currentPath);
+    let currentIndex = pages.findIndex(p => window.location.pathname.toLowerCase().includes(p.toLowerCase()));
+    if (currentIndex === -1) currentIndex = 0;
 
-    // Default to first route if current page not in list
-    let nextIndex = (currentIndex + 1) % routes.length;
-    let nextRoute = routes[nextIndex];
+    const progressBar = document.getElementById("progressBar");
 
-    setTimeout(function () {
-        // Optional fade-out effect
-        document.body.style.transition = "opacity 1s";
-        document.body.style.opacity = 0;
+    let timePassed = 0;
+    const duration = 60; // seconds
 
-        setTimeout(function () {
-            window.location.href = nextRoute;
-        }, 1000); // Redirect after fade
-    }, 59000); // Start fade at 59s
+    function updateProgressBar() {
+        timePassed++;
+        const percent = (timePassed / duration) * 100;
+        if (progressBar) progressBar.style.width = percent + "%";
+
+        if (timePassed >= duration) {
+            const nextIndex = (currentIndex + 1) % pages.length;
+            window.location.href = pages[nextIndex];
+        }
+    }
+
+    setInterval(updateProgressBar, 1000);
 });

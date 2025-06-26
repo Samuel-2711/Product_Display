@@ -2,11 +2,14 @@
 @inject Product_Display.Data.AppDbContext _db
 
 @{
-    var textRoller = _db.TextRollers.FirstOrDefault();
-    string marqueeText = textRoller != null ? textRoller.Text.Replace("||", " &nbsp;||&nbsp;") : "Welcome to Treasury Rates";
+    var textRollers = _db.TextRollers.ToList();
+    string marqueeText = textRollers.Count > 0
+        ? string.Join(" &nbsp;|| &nbsp; ", textRollers.Select(t => t.Text))
+        : "Welcome to Treasury Rates";
 
     var savings = _db.SavingDays.OrderBy(s => s.Id).ToList();
 }
+
 
 <!DOCTYPE html>
 <html>
@@ -25,6 +28,23 @@
             flex-direction: column;
         }
 
+        #progressBarContainer {
+            height: 5px;
+            width: 100%;
+            background-color: #e0e0e0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background-color: #28a745;
+            transition: width 1s linear;
+        }
+
         .client-header {
             display: flex;
             justify-content: space-between;
@@ -32,6 +52,7 @@
             padding: 8px 20px;
             background-color: white;
             border-bottom: 1px solid #ccc;
+            margin-top: 5px;
         }
 
         .datetime {
@@ -83,6 +104,12 @@
     </style>
 </head>
 <body>
+    <!-- Progress Bar -->
+    <div id="progressBarContainer">
+        <div id="progressBar"></div>
+    </div>
+
+    <!-- Header -->
     <div class="client-header">
         <div class="datetime" id="datetime"></div>
         <div class="logo">
@@ -90,11 +117,12 @@
         </div>
     </div>
 
+    <!-- Page Content -->
     <div class="content-wrapper">
         @RenderBody()
     </div>
 
-    <!-- SavingDay Row Table -->
+    <!-- Saving Days Table -->
     <div class="saving-row">
         @foreach (var item in savings)
         {
@@ -110,20 +138,24 @@
         <marquee>@Html.Raw(marqueeText)</marquee>
     </div>
 
+    @RenderSection("Scripts", required: false)
+
     <script>
         function updateTime() {
             const now = new Date();
             const options = {
-                weekday: 'long', year: 'numeric', month: 'long',
-                day: 'numeric', hour: 'numeric', minute: 'numeric',
+                weekday: 'long', year: 'numeric', month: 'short',
+                day: 'numeric', hour: '2-digit', minute: '2-digit',
                 hour12: true
             };
-            document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
+            const datetimeElement = document.getElementById("datetime");
+            if (datetimeElement) {
+                datetimeElement.textContent = now.toLocaleString('en-US', options);
+            }
         }
+
         updateTime();
         setInterval(updateTime, 60000);
     </script>
-
-    @RenderSection("Scripts", required: false)
 </body>
 </html>

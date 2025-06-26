@@ -67,9 +67,9 @@
 
 <div class="center-wrapper">
     <div class="login-container">
-        <img src="~/images/badge.png" alt="Login Logo" class="login-logo" /> <!-- Your logo path -->
+        <img src="~/images/badge.png" alt="Login Logo" class="login-logo" />
 
-        <form method="post">
+        <form method="post" onsubmit="return showSpinner()">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="form-floating mb-4 text-start">
@@ -84,11 +84,32 @@
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-success w-100 py-2">Login</button>
+            <button id="loginBtn" type="submit" class="btn btn-success w-100 py-2">Login</button>
+
+            <div id="loadingSpinner" class="text-center mt-3" style="display: none;">
+                <div class="spinner-border text-success" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function showSpinner() {
+            // Show spinner
+            document.getElementById("loadingSpinner").style.display = "block";
+
+            // Disable login button
+            const loginBtn = document.getElementById("loginBtn");
+            loginBtn.disabled = true;
+            loginBtn.innerText = "Logging in...";
+
+            // Allow form to continue submitting
+            return true;
+        }
+    </script>
 }
